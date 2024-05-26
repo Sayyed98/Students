@@ -53,3 +53,5 @@ func (s *ServiceHandler) AddStudent(c *gin.Context, studentName entity.StudentDe
 
 	return nil
 }
+
+func (s *ServiceHandler) GetStudent(c *gin.Context) (entity.StudentDetails, error) {}
