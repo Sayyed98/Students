@@ -2,6 +2,7 @@ package services
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	entity "student/Entity"
 
@@ -11,6 +12,7 @@ import (
 
 type Services interface {
 	AddStudent(c *gin.Context, studentName entity.StudentDetails) error
+	GetStudent(c *gin.Context, id int) (entity.StudentDetails, error)
 }
 
 // const (
@@ -54,4 +56,15 @@ func (s *ServiceHandler) AddStudent(c *gin.Context, studentName entity.StudentDe
 	return nil
 }
 
-func (s *ServiceHandler) GetStudent(c *gin.Context) (entity.StudentDetails, error) {}
+func (s *ServiceHandler) GetStudent(c *gin.Context, id int) (entity.StudentDetails, error) {
+	var student entity.StudentDetails
+	query := "Select * from studentsDetails where id= ?"
+	err := s.db.QueryRow(query, id).Scan(&student.Id, &student.Name, &student.PhoneNumber)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return student, fmt.Errorf("student not found")
+		}
+		return student, fmt.Errorf("failed to get student: %v", err)
+	}
+	return student, nil
+}

@@ -16,6 +16,6 @@ func main() {
 	web := services.NewWebHandler(service)
 	r := gin.Default()
 	r.POST("/add", web.AddStudent)
-	r.GET("/student", web.GetStudent)
+	r.GET("/student/:id", web.GetStudent)
 	r.Run(":8080")
 }

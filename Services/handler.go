@@ -2,6 +2,7 @@ package services
 
 import (
 	"net/http"
+	"strconv"
 	entity "student/Entity"
 
 	"github.com/gin-gonic/gin"
@@ -33,11 +34,16 @@ func (w *WebHandler) AddStudent(c *gin.Context) {
 }
 
 func (w *WebHandler) GetStudent(c *gin.Context) {
-	details, err := w.ser.GetStudent(c)
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid Student ID"})
+	}
+
+	details, err := w.ser.GetStudent(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.json
+	c.JSON(http.StatusOK, details)
 }
